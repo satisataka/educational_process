@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+djangorestframework = "*"
+python-dotenv = "*"
+psycopg = "*"
+pip = "*"
+djangorestframework-simplejwt = "*"
+
+[dev-packages]
+mypy = "*"
+flake8 = "*"
+flake8-django = "*"
+flake8-bugbear = "*"
+pep8-naming = "*"
+flake8-builtins = "*"
+flake8-isort = "*"
+
+[requires]
+python_version = "3.11"
+python_full_version = "3.11.4"
