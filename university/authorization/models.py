@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 
-from university.common.models import UUIDModel, ExcludeDeletedManagerMixin
+from university.common.models import SoftDeletedUUIDModel
 
 
 class UsersManager(BaseUserManager):
@@ -35,11 +35,15 @@ class UsersManager(BaseUserManager):
         return self._create_user(username, email, password, **extra_fields)
 
 
-class DefaultUsersManager(ExcludeDeletedManagerMixin, UsersManager):
-    pass
+class SoftDeleteUsersManager(UsersManager):
+    """
+    will be excluded deleted objects from queryset
+    """
+    def get_queryset(self):
+        return super().get_queryset().exclude(deleted_at__isnull=False)
 
 
-class Users(AbstractBaseUser, PermissionsMixin, UUIDModel):
+class Users(AbstractBaseUser, PermissionsMixin, SoftDeletedUUIDModel):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, unique=True)
     birthday = models.DateField(null=True)
@@ -47,19 +51,12 @@ class Users(AbstractBaseUser, PermissionsMixin, UUIDModel):
     first_name = models.CharField(max_length=150, null=True)
     last_name = models.CharField(max_length=150, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(null=True)
-
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
-    objects = UsersManager()
-    all_objects = DefaultUsersManager
-
-    class Meta:
-        db_table = 'users'
+    objects = SoftDeleteUsersManager()
+    all_objects = UsersManager()
 
     def __str__(self):
         return self.email
