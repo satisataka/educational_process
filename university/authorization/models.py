@@ -6,7 +6,7 @@ from django.contrib.auth.models import PermissionsMixin
 from university.common.models import SoftDeletedUUIDModel
 
 
-class UsersManager(BaseUserManager):
+class UsersManager(BaseUserManager['Users']):
     def _create_user(self, username, email, password, **extra_fields):
         """
         Create and save a user with the given username, email, and password.

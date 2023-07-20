@@ -4,7 +4,7 @@ from django.db import models
 from django.utils import timezone
 
 
-class SoftDeletedManager(models.Manager):
+class SoftDeletedManager(models.Manager[models.Model]):
     """
     will be excluded deleted objects from queryset
     """
