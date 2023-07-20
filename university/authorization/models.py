@@ -1,8 +1,7 @@
-from django.contrib.auth.hashers import make_password
 from django.db import models
-
-from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import PermissionsMixin
 
 from university.common.models import SoftDeletedUUIDModel
 
@@ -39,6 +38,7 @@ class SoftDeleteUsersManager(UsersManager):
     """
     will be excluded deleted objects from queryset
     """
+
     def get_queryset(self):
         return super().get_queryset().exclude(deleted_at__isnull=False)
 
