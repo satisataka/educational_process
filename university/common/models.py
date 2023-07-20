@@ -32,8 +32,11 @@ class SoftDeletedUUIDModel(UUIDModel):
     """
     deleted_at = models.DateTimeField(null=True, default=None, db_index=True)
 
-    objects = SoftDeletedManager
-    all_objects = models.Manager
+    objects: models.Manager = SoftDeletedManager()
+    all_objects: models.Manager = models.Manager()
+
+    class Meta(UUIDModel.Meta):
+        abstract = True
 
     def soft_delete(self):
         self.deleted_at = timezone.now()
@@ -42,6 +45,3 @@ class SoftDeletedUUIDModel(UUIDModel):
     def restore(self):
         self.deleted_at = None
         self.save()
-
-    class Meta(UUIDModel.Meta):
-        abstract = True
